@@ -25,10 +25,13 @@ module.exports = function(io) {
         
         socket.on('disconnect', function() {
             if (socket.username) {
+                space.destroyPlayer(username);
                 delete players[socket.username];
+                io.emit('system message', username + ' left the server.');
             }
         });
         
         socket.on('keyboard state')
     });
+    
 };

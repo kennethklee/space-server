@@ -1,4 +1,4 @@
-var Box2D = require('../box2d');
+var Box2D = require('box2dweb');
 
 var init = function(world) {
     var staticDef = new Box2D.Dynamics.b2BodyDef();
@@ -65,4 +65,8 @@ Space.prototype.destroyPlayer = function(username) {
 
 Space.prototype.getPlayer = function(username) {
     return this.players[username];
+};
+
+Space.prototype.getState = function() {
+    
 };

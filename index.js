@@ -1,10 +1,10 @@
 var app = require('express')(),
     server = require('http').Server(app),
     io = require('socket.io')(server),
-    services = require('./services');   
+    services = require('./services');
 
-// Setup services
-services(app, io);
+// Initialize services
+new services(app, io);
 
 // Start server
 app.set('port', process.env.PORT || 3000);
