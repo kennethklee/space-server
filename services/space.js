@@ -74,7 +74,7 @@ Space.prototype.getPlayer = function(username) {
 };
 
 Space.prototype.getState = function() {
-    var serialized = {},
+    var serializedPlayers = {},
         usernames = Object.keys(this.players);
     for(var i = 0; i < usernames.length; i++) {
         var username = usernames[i],
@@ -83,11 +83,15 @@ Space.prototype.getState = function() {
             position = body.GetPosition(),
             linearVelocity = body.GetLinearVelocity();
         
-        serialized[username] = {
+        serializedPlayers[username] = {
             type: player.type,
             position: [position.x, position.y],
             linearVelocity: [linearVelocity.x, linearVelocity.y]
         };
     }
-    return serialized;
+    
+    return {
+        world: this.boundry,
+        players: serializedPlayers
+    };
 };
