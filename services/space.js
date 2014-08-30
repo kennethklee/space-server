@@ -1,6 +1,6 @@
 var Box2D = require('box2dweb');
 
-var init = function(world) {
+var init = function(world, width, height, padding) {
     var staticDef = new Box2D.Dynamics.b2BodyDef();
     staticDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
 
@@ -14,21 +14,21 @@ var init = function(world) {
     wall.shape = new Box2D.Collision.Shapes.b2PolygonShape();
 
     // Top
-    wall.shape.SetAsBox(1000, 10);
+    wall.shape.SetAsBox(width, padding);
     staticDef.position.Set(0, 0);
     world.CreateBody(staticDef).CreateFixture(wall);
 
     // Bottom
-    staticDef.position.Set(9990, 0);
+    staticDef.position.Set(width - padding, 0);
     world.CreateBody(staticDef).CreateFixture(wall);
 
     // Left
-    wall.shape.SetAsBox(10, 1000);
+    wall.shape.SetAsBox(padding, height);
     staticDef.position.Set(0, 0);
     world.CreateBody(staticDef).CreateFixture(wall);
 
     // Right
-    staticDef.position.Set(0, 9990);
+    staticDef.position.Set(0, height - padding);
     world.CreateBody(staticDef).CreateFixture(wall);
 };
 
@@ -36,8 +36,13 @@ var Space = function() {
     var gravity = new Box2D.Common.Math.b2Vec2(0, 0);
     this.world = new Box2D.Dynamics.b2World(gravity, true);    // Allow sleep
     this.players = {};
+    this.boundry = {
+        width: 1000,
+        height: 1000,
+        padding: 10
+    };
     
-    init(this.world);
+    init(this.world, 1000, 1000, 10);
 };
 module.exports = new Space();
 
@@ -47,6 +52,7 @@ Space.prototype.spawnPlayer = function(username, x, y) {
     
     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
     bodyDef.position.Set(x, y);
+    bodyDef.SetFixedRotation(true);
     playerDef.density = 1.0;
     playerDef.friction = 0.5;
     playerDef.restitution = 0.3;
@@ -68,5 +74,20 @@ Space.prototype.getPlayer = function(username) {
 };
 
 Space.prototype.getState = function() {
-    
+    var serialized = {},
+        usernames = Object.keys(this.players);
+    for(var i = 0; i < usernames.length; i++) {
+        var username = usernames[i],
+            player = this.players[username],
+            body = player.GetBody(),
+            position = body.GetPosition(),
+            linearVelocity = body.GetLinearVelocity();
+        
+        serialized[username] = {
+            type: player.type,
+            position: [position.x, position.y],
+            linearVelocity: [linearVelocity.x, linearVelocity.y]
+        };
+    }
+    return serialized;
 };

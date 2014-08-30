@@ -17,9 +17,11 @@ module.exports = function(io) {
        console.log('a user connected');
         
         socket.on('login', function(username) {
+            var x = randomBetween(space.boundry.padding, space.boundry.width - space.boundry.padding),
+                y = randomBetween(space.boundry.padding, space.boundry.height - space.boundry.padding);
             // TODO check duplicates
             socket.username = username;
-            socket.player = space.spawnPlayer(username);
+            socket.player = space.spawnPlayer(username, x, y);
             io.emit('system message', username + ' joined the server.');
         });
         
@@ -33,5 +35,9 @@ module.exports = function(io) {
         
         socket.on('keyboard state')
     });
-    
+};
+
+// Helpers
+var randomBetween = function(min, max) {
+    return Math.round((Math.random() * (max - min)) + min);
 };
