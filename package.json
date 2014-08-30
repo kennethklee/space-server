@@ -1,0 +1,22 @@
+{
+  "name": "space-server",
+  "version": "1.0.0",
+  "description": "Top down multiplayer space server",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kennethklee/space-server.git"
+  },
+  "author": "Kenneth Lee <kennethkl@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kennethklee/space-server/issues"
+  },
+  "homepage": "https://github.com/kennethklee/space-server",
+  "devDependencies": {
+    "mocha": "^1.21.4"
+  }
+}
