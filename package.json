@@ -4,6 +4,7 @@
   "description": "Top down multiplayer space server",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "test": "mocha"
   },
   "repository": {
@@ -18,5 +19,9 @@
   "homepage": "https://github.com/kennethklee/space-server",
   "devDependencies": {
     "mocha": "^1.21.4"
+  },
+  "dependencies": {
+    "express": "^4.8.6",
+    "socket.io": "^1.0.6"
   }
 }
