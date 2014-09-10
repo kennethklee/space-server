@@ -1,6 +1,5 @@
 var http = require('./http'),
-    websocket = require('./websocket'),
-    space = require('./space');
+    websocket = require('./websocket');
 
 // Setup services
 module.exports = function(app, io) {
