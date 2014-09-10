@@ -1,11 +1,12 @@
-var Box2D = require('box2dweb');
+var Box2D = require('box2dweb'),
+    log = require('debug')('game:space');
 
 var init = function(world, width, height, padding) {
     var staticDef = new Box2D.Dynamics.b2BodyDef();
     staticDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
 
     // Let's just put a static box around everything for now (1000x1000)
-    
+
     // Create a static wall
     var wall = new Box2D.Dynamics.b2FixtureDef();
     wall.density = 1.0;
@@ -41,15 +42,16 @@ var Space = function() {
         height: 1000,
         padding: 10
     };
-    
+
     init(this.world, 1000, 1000, 10);
+    log('World has been created');
 };
 module.exports = new Space();
 
 Space.prototype.spawnPlayer = function(username, x, y) {
     var bodyDef = new Box2D.Dynamics.b2BodyDef(),
         playerDef = new Box2D.Dynamics.b2FixtureDef();
-    
+
     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
     bodyDef.position.Set(x, y);
     bodyDef.fixedRotation = false;
@@ -58,15 +60,17 @@ Space.prototype.spawnPlayer = function(username, x, y) {
     playerDef.restitution = 0.3;
     playerDef.shape = new Box2D.Collision.Shapes.b2CircleShape();
     playerDef.shape.SetRadius(10);
-    
+
     var player = this.world.CreateBody(bodyDef).CreateFixture(playerDef);
     player.type = 'player';
-    
+
     this.players[username] = player;
+    log('Player, "%s", spawned at (%d, %d)', username, x, y);
 };
 
 Space.prototype.destroyPlayer = function(username) {
     this.world.DestroyBody(this.players[username].GetBody());
+    log('Player, "%s", destroyed', username);
 };
 
 Space.prototype.getPlayer = function(username) {
@@ -82,14 +86,15 @@ Space.prototype.getState = function() {
             body = player.GetBody(),
             position = body.GetPosition(),
             linearVelocity = body.GetLinearVelocity();
-        
+
         serializedPlayers[username] = {
             type: player.type,
+            heading:
             position: [position.x, position.y],
             linearVelocity: [linearVelocity.x, linearVelocity.y]
         };
     }
-    
+
     return {
         world: this.boundry,
         players: serializedPlayers

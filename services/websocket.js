@@ -1,4 +1,5 @@
-var space = require('./space');
+var space = require('./space'),
+    log = require('debug')('game:websocket');
 
 // #Setup WebSocket service
 // ## Incoming messages
@@ -18,7 +19,7 @@ module.exports = function(io) {
             var x = randomBetween(space.boundry.padding, space.boundry.width - space.boundry.padding),
                 y = randomBetween(space.boundry.padding, space.boundry.height - space.boundry.padding);
 
-           console.log(username + ' logged in');
+            log('Socket, "%s" logged in', username);
 
             // TODO check duplicates
             socket.username = username;
@@ -30,13 +31,16 @@ module.exports = function(io) {
             if (socket.username) {
                 space.destroyPlayer(socket.username);
                 delete players[socket.username];
-                console.log(socket.username + ' left the server');
+                log('Socket, "%s" disconnected', socket.username);
                 io.emit('system message', socket.username + ' left the server.');
             }
         });
 
-        socket.on('keyboard state', function() {
-            // Do something
+        socket.on('keyboard state', function(state) {
+            // Turn, accelerate, fire
+            if (state.left) {   // Rotate
+
+            }
         });
     });
 };

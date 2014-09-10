@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "box2dweb": "^2.1.0-b",
+    "debug": "^2.0.0",
     "express": "^4.8.6",
     "socket.io": "^1.0.6"
   }
