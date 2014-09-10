@@ -89,7 +89,6 @@ Space.prototype.getState = function() {
 
         serializedPlayers[username] = {
             type: player.type,
-            heading:
             position: [position.x, position.y],
             linearVelocity: [linearVelocity.x, linearVelocity.y]
         };
