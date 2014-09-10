@@ -12,27 +12,29 @@ var space = require('./space');
 // * game state - state of current game
 module.exports = function(io) {
     var players = {};
-    
+
     io.on('connection', function(socket) {
-       console.log('a user connected');
-        
         socket.on('login', function(username) {
             var x = randomBetween(space.boundry.padding, space.boundry.width - space.boundry.padding),
                 y = randomBetween(space.boundry.padding, space.boundry.height - space.boundry.padding);
+
+           console.log(username + ' logged in');
+
             // TODO check duplicates
             socket.username = username;
             socket.player = space.spawnPlayer(username, x, y);
             io.emit('system message', username + ' joined the server.');
         });
-        
+
         socket.on('disconnect', function() {
             if (socket.username) {
-                space.destroyPlayer(username);
+                space.destroyPlayer(socket.username);
                 delete players[socket.username];
-                io.emit('system message', username + ' left the server.');
+                console.log(socket.username + ' left the server');
+                io.emit('system message', socket.username + ' left the server.');
             }
         });
-        
+
         socket.on('keyboard state', function() {
             // Do something
         });
