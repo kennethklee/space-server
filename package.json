@@ -19,6 +19,7 @@
   "homepage": "https://github.com/kennethklee/space-server",
   "devDependencies": {
     "mocha": "^1.21.4",
+    "should": "^4.0.4",
     "socket.io-client": "^1.1.0"
   },
   "dependencies": {

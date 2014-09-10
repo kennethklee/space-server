@@ -52,7 +52,7 @@ Space.prototype.spawnPlayer = function(username, x, y) {
     
     bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
     bodyDef.position.Set(x, y);
-    bodyDef.SetFixedRotation(true);
+    bodyDef.fixedRotation = false;
     playerDef.density = 1.0;
     playerDef.friction = 0.5;
     playerDef.restitution = 0.3;

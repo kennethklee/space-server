@@ -33,7 +33,9 @@ module.exports = function(io) {
             }
         });
         
-        socket.on('keyboard state')
+        socket.on('keyboard state', function() {
+            // Do something
+        });
     });
 };
 
