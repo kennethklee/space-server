@@ -36,7 +36,7 @@ var init = function(world, width, height, padding) {
 var Space = function() {
     var gravity = new Box2D.Common.Math.b2Vec2(0, 0);
     this.world = new Box2D.Dynamics.b2World(gravity, true);    // Allow sleep
-    this.players = {};
+    this.players = [];
     this.boundry = {
         width: 1000,
         height: 1000,
@@ -70,6 +70,8 @@ Space.prototype.spawnPlayer = function(username, x, y) {
 
 Space.prototype.destroyPlayer = function(username) {
     this.world.DestroyBody(this.players[username].GetBody());
+
+    delete this.players[username];
     log('Player, "%s", destroyed', username);
 };
 
@@ -77,7 +79,12 @@ Space.prototype.getPlayer = function(username) {
     return this.players[username];
 };
 
-Space.prototype.getState = function() {
+Space.prototype.getMapState = function() {
+    // TODO map
+    return {};
+};
+
+Space.prototype.getPlayerStates = function() {
     var serializedPlayers = {},
         usernames = Object.keys(this.players);
     for(var i = 0; i < usernames.length; i++) {
