@@ -5,4 +5,4 @@ var http = require('./http'),
 module.exports = function(app, io) {
     http(app);
     websocket(io);
-}
+};

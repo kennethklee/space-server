@@ -55,6 +55,13 @@ describe('Server', function() {
                     done();
                 });
             });
+
+            it('should get player states in heartbeats', function(done) {
+                this.timeout(5000);
+                client.on('player states', function(playerStates) {
+                    done();
+                });
+            });
         });
     });
 

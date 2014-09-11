@@ -11,7 +11,7 @@ var space = require('./space'),
 // ## Outgoing messages
 // * system message - message from the server
 // * user message - message from a user
-// * player state - state of all players in current game
+// * player states - state of all players in current game
 // * map state - state of map, transmitted upon connection
 module.exports = function(io) {
     var players = {};
@@ -25,7 +25,7 @@ module.exports = function(io) {
 
             log('Socket, %s logged in as "%s"', socket.id, username);
 
-            // TODO check duplicates
+            // TODO reject duplicates
             socket.username = username;
             socket.player = space.spawnPlayer(username, x, y);
             io.emit('system message', username + ' joined the server.');
@@ -50,9 +50,10 @@ module.exports = function(io) {
         socket.emit('map state', space.getMapState());
     });
 
-    // Update state every second
+    // Update state every 5 seconds
     setInterval(function() {
-        io.emit('player state', space.getPlayerStates());
+        log('heartbeat - player states sent');
+        io.emit('player states', space.getPlayerStates());
     }, 1000);
 };
 

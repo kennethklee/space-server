@@ -1,6 +1,7 @@
 var Box2D = require('box2dweb'),
     log = require('debug')('game:space');
 
+// Helper function to construct the world
 var init = function(world, width, height, padding) {
     var staticDef = new Box2D.Dynamics.b2BodyDef();
     staticDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
@@ -34,19 +35,29 @@ var init = function(world, width, height, padding) {
 };
 
 var Space = function() {
-    var gravity = new Box2D.Common.Math.b2Vec2(0, 0);
+    var invFrameRate = 1/60,
+        gravity = new Box2D.Common.Math.b2Vec2(0, 0);
+
     this.world = new Box2D.Dynamics.b2World(gravity, true);    // Allow sleep
     this.players = [];
+    // TODO make as options
     this.boundry = {
         width: 1000,
         height: 1000,
         padding: 10
     };
 
-    init(this.world, 1000, 1000, 10);
+    init(this.world, this.boundry.width, this.boundry.height, this.boundry.padding);
     log('World has been created');
+
+    this.interval = setInterval(this.update, 1000 / 60);
 };
-module.exports = new Space();
+
+Space.prototype.update = function() {
+    var invFrameRate = 1/60;
+    module.exports.world.Step(invFrameRate, 10, 10);    // time, velocity, position
+    module.exports.world.ClearForces();
+};
 
 Space.prototype.spawnPlayer = function(username, x, y) {
     var bodyDef = new Box2D.Dynamics.b2BodyDef(),
@@ -81,7 +92,7 @@ Space.prototype.getPlayer = function(username) {
 
 Space.prototype.getMapState = function() {
     // TODO map
-    return {};
+    return this.boundry;
 };
 
 Space.prototype.getPlayerStates = function() {
@@ -101,8 +112,7 @@ Space.prototype.getPlayerStates = function() {
         };
     }
 
-    return {
-        world: this.boundry,
-        players: serializedPlayers
-    };
+    return serializedPlayers;
 };
+
+module.exports = new Space();
