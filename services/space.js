@@ -95,9 +95,9 @@ Space.prototype.getMapState = function() {
     return this.boundry;
 };
 
-Space.prototype.getPlayerStates = function() {
+Space.prototype.getPlayerStates = function(userList) {
     var serializedPlayers = {},
-        usernames = Object.keys(this.players);
+        usernames = userList || Object.keys(this.players);
     for(var i = 0; i < usernames.length; i++) {
         var username = usernames[i],
             player = this.players[username],

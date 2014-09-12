@@ -57,11 +57,22 @@ describe('Server', function() {
             });
 
             it('should get player states in heartbeats', function(done) {
-                this.timeout(5000);
-                client.on('player states', function(playerStates) {
+                client.on('delta sync', function(state) {
+                    state.should.have.property('timestamp');
+                    state.should.have.property('players');
                     done();
                 });
             });
+
+            it('should get world state heartbeats', function(done) {
+                this.timeout(5000);
+                client.on('heartbeat sync', function(state) {
+                    state.should.have.property('timestamp');
+                    state.should.have.property('players');
+                    done();
+                });
+            });
+
         });
     });
 

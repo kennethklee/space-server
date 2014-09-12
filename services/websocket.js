@@ -11,10 +11,12 @@ var space = require('./space'),
 // ## Outgoing messages
 // * system message - message from the server
 // * user message - message from a user
-// * player states - state of all players in current game
+// * heartbeat sync - complete state of current game
+// * delta sync - changes in the world
 // * map state - state of map, transmitted upon connection
 module.exports = function(io) {
-    var players = {};
+    var players = {},   // All players
+        deltaQueue = {};    // All delta players
 
     io.on('connection', function(socket) {
         log('Socket connection, %s', socket.id);
@@ -50,11 +52,24 @@ module.exports = function(io) {
         socket.emit('map state', space.getMapState());
     });
 
-    // Update state every 5 seconds
+    // Delta sync every "frame" @ 15fps
+    setInterval(function() {
+        var deltaPlayers = Object.keys(deltaQueue);
+        io.emit('delta sync', {
+            timestamp: new Date(),
+            players: space.getPlayerStates(deltaPlayers)
+        });
+        deltaQueue = {};
+    }, 1000/15);
+
+    // Heartbeat every 5 seconds, our "quiet" time
     setInterval(function() {
         log('heartbeat - player states sent');
-        io.emit('player states', space.getPlayerStates());
-    }, 1000);
+        io.emit('heartbeat sync', {
+            timestamp: new Date(),
+            players: space.getPlayerStates()
+        });
+    }, 5000);
 };
 
 // Helpers
