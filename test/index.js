@@ -22,6 +22,7 @@ describe('Server', function() {
             var player = app.space.spawnPlayer('test', 500, 500);
             player.applyThrust(10, 10);
 
+            // Let's check in a bit
             setTimeout(function() {
                 var position = app.space.getPlayerStates().test.position;
                 position.x.should.be.greaterThan(500);
