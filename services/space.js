@@ -93,6 +93,9 @@ Space.prototype.getPlayer = function(username) {
 Space.prototype.applyThrottle = function(username, fx, fy) {
     var body = this.players[username].GetBody(),
         velocity = body.GetLinearVelocity();
+
+
+    /*
     float desiredVel = 0;
     switch ( moveState )
     {
@@ -103,6 +106,7 @@ Space.prototype.applyThrottle = function(username, fx, fy) {
     float velChange = desiredVel - vel.x;
     float impulse = body->GetMass() * velChange; //disregard time factor
     body->ApplyLinearImpulse( b2Vec2(impulse,0), body->GetWorldCenter() );
+    */
 };
 
 Space.prototype.getMapState = function() {
