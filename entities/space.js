@@ -1,4 +1,5 @@
 var Box2D = require('box2dweb'),
+    Ship = require('./ship'),
     log = require('debug')('game:space');
 
 // Helper function to construct the world
@@ -60,27 +61,16 @@ Space.prototype.update = function() {
 };
 
 Space.prototype.spawnPlayer = function(username, x, y) {
-    var bodyDef = new Box2D.Dynamics.b2BodyDef(),
-        playerDef = new Box2D.Dynamics.b2FixtureDef();
+    var ship = new Ship(this.world, x, y);
 
-    bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
-    bodyDef.position.Set(x, y);
-    bodyDef.fixedRotation = false;
-    playerDef.density = 1.0;
-    playerDef.friction = 0.5;
-    playerDef.restitution = 0.3;
-    playerDef.shape = new Box2D.Collision.Shapes.b2CircleShape();
-    playerDef.shape.SetRadius(10);
-
-    var player = this.world.CreateBody(bodyDef).CreateFixture(playerDef);
-    player.type = 'player';
-
-    this.players[username] = player;
+    this.players[username] = ship;
     log('Player, "%s", spawned at (%d, %d)', username, x, y);
+
+    return ship;
 };
 
 Space.prototype.destroyPlayer = function(username) {
-    this.world.DestroyBody(this.players[username].GetBody());
+    this.players[username].destroy();
 
     delete this.players[username];
     log('Player, "%s", destroyed', username);
@@ -88,25 +78,6 @@ Space.prototype.destroyPlayer = function(username) {
 
 Space.prototype.getPlayer = function(username) {
     return this.players[username];
-};
-
-Space.prototype.applyThrottle = function(username, fx, fy) {
-    var body = this.players[username].GetBody(),
-        velocity = body.GetLinearVelocity();
-
-
-    /*
-    float desiredVel = 0;
-    switch ( moveState )
-    {
-      case MS_LEFT:  desiredVel = -5; break;
-      case MS_STOP:  desiredVel =  0; break;
-      case MS_RIGHT: desiredVel =  5; break;
-    }
-    float velChange = desiredVel - vel.x;
-    float impulse = body->GetMass() * velChange; //disregard time factor
-    body->ApplyLinearImpulse( b2Vec2(impulse,0), body->GetWorldCenter() );
-    */
 };
 
 Space.prototype.getMapState = function() {
@@ -120,14 +91,14 @@ Space.prototype.getPlayerStates = function(userList) {
     for(var i = 0; i < usernames.length; i++) {
         var username = usernames[i],
             player = this.players[username],
-            body = player.GetBody(),
+            body = player.fixture.GetBody(),
             position = body.GetPosition(),
             linearVelocity = body.GetLinearVelocity();
 
         serializedPlayers[username] = {
             type: player.type,
-            position: [position.x, position.y],
-            linearVelocity: [linearVelocity.x, linearVelocity.y]
+            position: position,
+            linearVelocity: linearVelocity
         };
     }
 

@@ -1,4 +1,4 @@
-var space = require('./space'),
+var space = require('../entities/space'),
     log = require('debug')('game:websocket');
 
 // #Setup WebSocket service
@@ -20,6 +20,7 @@ module.exports = function(io) {
 
     io.on('connection', function(socket) {
         log('Socket connection, %s', socket.id);
+        socket.emit('map state', space.getMapState());
 
         socket.on('login', function(username) {
             var x = randomBetween(space.boundry.padding, space.boundry.width - space.boundry.padding),
@@ -29,7 +30,7 @@ module.exports = function(io) {
 
             // TODO reject duplicates
             socket.username = username;
-            socket.player = space.spawnPlayer(username, x, y);
+            socket.player = players[username] = space.spawnPlayer(username, x, y);
             io.emit('system message', username + ' joined the server.');
         });
 
@@ -47,7 +48,7 @@ module.exports = function(io) {
 
             // throttle
             if (state.throttle) {
-                space.applyThrottle(socket.username, state.throttle.x, state.throttle.y);
+                socket.player.applyThrust(state.throttle.x, state.throttle.y);
             }
 
             // TODO: fire
@@ -60,9 +61,6 @@ module.exports = function(io) {
         socket.on('aspect change', function(state) {
             // Totally going to ignore this for now
         });
-
-
-        socket.emit('map state', space.getMapState());
     });
 
     // TODO: send as unreliable packets

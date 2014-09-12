@@ -8,7 +8,7 @@ describe('Server', function() {
         it('should spawn a player and destroy it', function(done) {
             app.space.spawnPlayer('test', 500, 500);
             app.space.players.should.have.property('test');
-            var position = app.space.players.test.GetBody().GetPosition();
+            var position = app.space.getPlayer('test').fixture.GetBody().GetPosition();
             position.x.should.equal(500);
             position.y.should.equal(500);
 
@@ -16,6 +16,19 @@ describe('Server', function() {
             app.space.players.should.not.have.property('test');
 
             done();
+        });
+
+        it('should apply thrust and move', function(done) {
+            var player = app.space.spawnPlayer('test', 500, 500);
+            player.applyThrust(10, 10);
+
+            setTimeout(function() {
+                var position = app.space.getPlayerStates().test.position;
+                position.x.should.be.greaterThan(500);
+                position.y.should.be.greaterThan(500);
+
+                done();
+            }, 200);
         });
     });
 
