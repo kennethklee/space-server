@@ -5,8 +5,8 @@ var space = require('./space'),
 // ## Incoming messages
 // * login - client enters a game
 // * disconnect - client leaves
-// * movement state - keyboard changes (up, down, left, right)
-// * action state - key press triggers (fire)
+// * action change - priority key press triggers (throttle state, fire state)
+// * aspect change - visual feature changes (heading)
 //
 // ## Outgoing messages
 // * system message - message from the server
@@ -42,15 +42,31 @@ module.exports = function(io) {
             log('Socket disconnection, %s', socket.id);
         });
 
-        socket.on('keyboard state', function(state) {
-            // Turn, accelerate, fire
-            if (state.left) {   // Rotate
+        socket.on('action change', function(state) {
+            deltaQueue[socket.username] = true; // Mark as changed
+
+            // throttle
+            if (state.throttle) {
+                space.applyThrottle(socket.username, state.throttle.x, state.throttle.y);
+            }
+
+            // TODO: fire
+            if (state.fire) {
 
             }
         });
 
+        // TODO: this should be recieved as unreliable packets
+        socket.on('aspect change', function(state) {
+            // Totally going to ignore this for now
+        });
+
+
         socket.emit('map state', space.getMapState());
     });
+
+    // TODO: send as unreliable packets
+    // TODO: pack before sending
 
     // Delta sync every "frame" @ 15fps
     setInterval(function() {
