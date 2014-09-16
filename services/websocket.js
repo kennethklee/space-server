@@ -5,8 +5,9 @@ var space = require('../entities/space'),
 // ## Incoming messages
 // * login - client enters a game
 // * disconnect - client leaves
-// * action change - priority key press triggers (throttle state, fire state)
-// * aspect change - visual feature changes (heading)
+// * movement change - movement key state changes (movement state)
+// * fire - fire key press
+// * aspect change - visual feature changes (distant player destroy sounds)
 //
 // ## Outgoing messages
 // * system message - message from the server
@@ -43,18 +44,16 @@ module.exports = function(io) {
             log('Socket disconnection, %s', socket.id);
         });
 
-        socket.on('action change', function(state) {
+        socket.on('movement change', function(state) {
             deltaQueue[socket.username] = true; // Mark as changed
 
-            // throttle
-            if (state.throttle) {
-                socket.player.applyThrust(state.throttle.x, state.throttle.y);
-            }
+            socket.player.setState(state);
+        });
 
-            // TODO: fire
-            if (state.fire) {
+        socket.on('fire', function(state) {
+            deltaQueue[socket.username] = true; // Mark as changed
 
-            }
+            // TODO Fire
         });
 
         // TODO: this should be recieved as unreliable packets
