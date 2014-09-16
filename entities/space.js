@@ -36,9 +36,9 @@ var init = function(world, width, height, padding) {
 };
 
 var Space = function() {
-    var invFrameRate = 1/60,
-        gravity = new Box2D.Common.Math.b2Vec2(0, 0);
+    var gravity = new Box2D.Common.Math.b2Vec2(0, 0);
 
+    this.updatedAt = new Date().getTime();
     this.world = new Box2D.Dynamics.b2World(gravity, true);    // Allow sleep
     this.players = [];
     // TODO make as options
@@ -55,9 +55,12 @@ var Space = function() {
 };
 
 Space.prototype.update = function() {
-    var invFrameRate = 1/60;
-    module.exports.world.Step(invFrameRate, 10, 10);    // time, velocity, position
+    var currentTime = new Date().getTime(),
+        deltaTime = currentTime - this.updatedAt;
+
+    module.exports.world.Step(deltaTime / 1000, 10, 10);    // time, velocity, position
     module.exports.world.ClearForces();
+    this.updatedAt = new Date().getTime();
 };
 
 Space.prototype.spawnPlayer = function(username, x, y) {
