@@ -56,8 +56,15 @@ var Space = function() {
 
 Space.prototype.update = function() {
     var currentTime = new Date().getTime(),
-        deltaTime = currentTime - this.updatedAt;
+        deltaTime = currentTime - this.updatedAt
+        usernames = Object.keys(this.players);
 
+    // Update players
+    for (var i = 0; i < usernames.length; i++) {
+        this.players[usernames[i]].update();
+    }
+
+    // Update world
     module.exports.world.Step(deltaTime / 1000, 10, 10);    // time, velocity, position
     module.exports.world.ClearForces();
     this.updatedAt = new Date().getTime();

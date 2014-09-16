@@ -1,4 +1,5 @@
 var Box2D = require('box2dweb'),
+    __ = require('underscore'),
     log = require('debug')('game:ship');
 
 var Ship = module.exports = function(world, x, y) {
@@ -17,10 +18,35 @@ var Ship = module.exports = function(world, x, y) {
     this.world = world;
     this.fixture = world.CreateBody(bodyDef).CreateFixture(playerDef);
     this.type = 'player';
+
+    this.heading = 0    // Radians
+    this.turnSpeed = 0.261799388    // About 15 degrees
+    this.acceleration = 10
 };
 
 Ship.prototype.destroy = function() {
     this.world.DestroyBody(this.fixture.GetBody());
+};
+
+Ship.prototype.setState = function(state) {
+    // TODO ensure only used states
+    __.extend(this.state, state);
+};
+
+Ship.prototype.update = function() {
+    if (this.state.left) {
+        this.heading -= this.turnSpeed;
+    }
+    if (this.state.right) {
+        this.heading += this.turnSpeed;
+    }
+    if (this.state.up) {
+        this.applyThrust(Math.cos(this.acceleration), Math.sin(this.acceleration));
+    }
+    if (this.state.down) {
+        var heading = this.heading + 3.14159265;    // Reverse
+        this.applyThrust(Math.cos(heading) * this.acceleration * 0.5, Math.sin(heading) * this.acceleration * 0.5);
+    }
 };
 
 Ship.prototype.applyThrust = function(vx, vy) {
