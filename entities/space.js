@@ -51,7 +51,7 @@ var Space = function() {
     init(this.world, this.boundry.width, this.boundry.height, this.boundry.padding);
     log('World has been created');
 
-    this.interval = setInterval(this.update, 1000 / 60);
+    this.interval = setInterval(this.update.bind(this), 1000 / 60);
 };
 
 Space.prototype.update = function() {
@@ -61,7 +61,7 @@ Space.prototype.update = function() {
 
     // Update players
     for (var i = 0; i < usernames.length; i++) {
-        this.players[usernames[i]].update();
+        this.players[usernames[i]].update(deltaTime);
     }
 
     // Update world

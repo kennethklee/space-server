@@ -24,10 +24,10 @@ describe('Server', function() {
 
             // Let's check in a bit
             setTimeout(function() {
+                player.setState({up: false});
                 var position = app.space.getPlayerStates().test.position;
-                console.log(position);
                 position.x.should.equal(500);
-                position.y.should.be.lessThan(500);
+                position.y.should.be.greaterThan(500);
 
                 done();
             }, 200);

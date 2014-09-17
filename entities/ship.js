@@ -18,6 +18,7 @@ var Ship = module.exports = function(world, x, y) {
     this.world = world;
     this.fixture = world.CreateBody(bodyDef).CreateFixture(playerDef);
     this.type = 'player';
+    this.state = {};
 
     this.heading = 0    // Radians
     this.turnSpeed = 0.261799388    // About 15 degrees
@@ -33,19 +34,18 @@ Ship.prototype.setState = function(state) {
     __.extend(this.state, state);
 };
 
-Ship.prototype.update = function() {
-    if (this.state.left) {
-        this.heading -= this.turnSpeed;
-    }
-    if (this.state.right) {
-        this.heading += this.turnSpeed;
-    }
+Ship.prototype.update = function(deltaTime) {
+    // NOTE: Heading of 0rad is north
+    this.heading -= (this.state.left || false) * this.turnSpeed;
+    this.heading += (this.state.right || false) * this.turnSpeed;
+    this.heading %= 6.2831853;  // Clamp!
+
     if (this.state.up) {
-        this.applyThrust(Math.cos(this.acceleration), Math.sin(this.acceleration));
+        this.applyThrust(Math.sin(this.heading) * this.acceleration, Math.cos(this.heading) * this.acceleration);
     }
     if (this.state.down) {
         var heading = this.heading + 3.14159265;    // Reverse
-        this.applyThrust(Math.cos(heading) * this.acceleration * 0.5, Math.sin(heading) * this.acceleration * 0.5);
+        this.applyThrust(Math.sin(heading) * this.acceleration * 0.5, Math.cos(heading) * this.acceleration * 0.5);
     }
 };
 
