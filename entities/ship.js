@@ -1,5 +1,5 @@
 var Box2D = require('box2dweb'),
-    __ = require('underscore'),
+    __ = require('lodash'),
     log = require('debug')('game:ship');
 
 var Ship = module.exports = function(world, x, y) {
