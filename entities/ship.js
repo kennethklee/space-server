@@ -35,8 +35,8 @@ Ship.prototype.setState = function(state) {
 
 Ship.prototype.update = function(deltaTime) {
     // NOTE: Heading of 0rad is north
-    this.heading -= (this.state.left || false) * this.turnSpeed;
-    this.heading += (this.state.right || false) * this.turnSpeed;
+    this.heading -= !!this.state.left * this.turnSpeed;
+    this.heading += !!this.state.right * this.turnSpeed;
     this.heading %= 6.2831853;  // Clamp!
 
     if (this.state.up) {
