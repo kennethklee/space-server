@@ -30,8 +30,7 @@ Ship.prototype.destroy = function() {
 };
 
 Ship.prototype.setState = function(state) {
-    // TODO ensure only used states
-    __.extend(this.state, state);
+    __.extend(this.state, __.pick(state, ['left', 'right', 'up', 'down']));
 };
 
 Ship.prototype.update = function(deltaTime) {
