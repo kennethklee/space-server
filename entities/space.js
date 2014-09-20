@@ -108,7 +108,8 @@ Space.prototype.getPlayerStates = function(userList) {
         serializedPlayers[username] = {
             type: player.type,
             position: position,
-            linearVelocity: linearVelocity
+            linearVelocity: linearVelocity,
+            heading: player.heading
         };
     }
 

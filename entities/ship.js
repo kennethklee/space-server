@@ -20,9 +20,10 @@ var Ship = module.exports = function(world, x, y) {
     this.type = 'player';
     this.state = {};
 
-    this.heading = 0    // Radians
-    this.turnSpeed = 0.261799388    // About 15 degrees
-    this.acceleration = 10
+    this.heading = 0;    // Radians
+    //this.turnSpeed = 0.261799388;    // About 15 degrees
+    this.turnSpeed = 0.0872664625;    // About 5 degrees
+    this.acceleration = 10;
 };
 
 Ship.prototype.destroy = function() {

@@ -17,23 +17,73 @@ describe('Server', function() {
 
             done();
         });
+    });
 
-        it('should apply thrust and move', function(done) {
-            var player = app.space.spawnPlayer('test', 500, 500);
-            player.setState({up: true});
+    describe('Ship', function() {
+        var ship;
+
+        beforeEach(function() {
+            ship = app.space.spawnPlayer('test', 500, 500);
+        });
+
+        afterEach(function() {
+            ship = null;
+            app.space.destroyPlayer('test');
+        });
+
+        it('should apply thrust and move forward', function(done) {
+            ship.setState({up: true});
 
             // Let's check in a bit
             setTimeout(function() {
-                player.setState({up: false});
-                var position = app.space.getPlayerStates().test.position;
-                position.x.should.equal(500);
-                position.y.should.be.greaterThan(500);
+                var state = app.space.getPlayerStates().test;
+                state.position.x.should.equal(500);
+                state.position.y.should.be.greaterThan(500);
 
                 done();
             }, 200);
         });
-    });
 
+        it('should turn', function(done) {
+            ship.setState({right: true});
+
+            // Let's check in a bit
+            setTimeout(function() {
+                var state = app.space.getPlayerStates().test;
+                state.position.x.should.equal(500);
+                state.position.y.should.equal(500);
+                state.heading.should.be.greaterThan(0);
+                done();
+            }, 200);
+        });
+
+        it('should turn left and thrust', function(done) {
+            ship.setState({up: true, left: true});
+
+            // Let's check in a bit
+            setTimeout(function() {
+                var state = app.space.getPlayerStates().test;
+                state.position.x.should.be.lessThan(500);
+                state.position.y.should.be.greaterThan(500);
+                state.heading.should.be.lessThan(0);
+                done();
+            }, 200);
+        });
+        
+        it('should turn right and reverse', function(done) {
+            ship.setState({down: true, right: true});
+
+            // Let's check in a bit
+            setTimeout(function() {
+                var state = app.space.getPlayerStates().test;
+                state.position.x.should.be.lessThan(500);
+                state.position.y.should.be.lessThan(500);
+                state.heading.should.be.greaterThan(0);
+                done();
+            }, 200);
+        });
+    });
+    
     describe('Websocket', function() {
 
         describe('Single Client', function() {

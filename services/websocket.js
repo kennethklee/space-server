@@ -51,8 +51,6 @@ module.exports = function(io) {
         });
 
         socket.on('fire', function(state) {
-            deltaQueue[socket.username] = true; // Mark as changed
-
             // TODO Fire
         });
 
