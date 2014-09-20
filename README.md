@@ -15,5 +15,5 @@ orientation
        \/
        -y
 ```
-x increments up
-y increments right
+x increments right
+y increments up
