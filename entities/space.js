@@ -117,3 +117,5 @@ Space.prototype.getPlayerStates = function(userList) {
 };
 
 module.exports = new Space();
+module.exports.Box2D = Box2D;
+module.exports.Ship = Ship;

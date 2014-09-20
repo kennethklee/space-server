@@ -18,7 +18,7 @@ var space = require('../entities/space'),
 module.exports = function(io) {
     var players = {},   // All players
         deltaQueue = {};    // All delta players
-
+    
     io.on('connection', function(socket) {
         log('Socket connection, %s', socket.id);
         socket.emit('map state', space.getMapState());
