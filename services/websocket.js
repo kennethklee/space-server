@@ -62,6 +62,9 @@ module.exports = function(io) {
 
     // TODO: send as unreliable packets
     // TODO: pack before sending
+    
+    // Update the world
+    setInterval(space.update.bind(space), 1000 / 60);
 
     // Delta sync every "frame" @ 15fps
     setInterval(function() {
