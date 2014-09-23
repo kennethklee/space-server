@@ -78,7 +78,7 @@ module.exports = function(io) {
 
     // Heartbeat every 5 seconds, our "quiet" time
     setInterval(function() {
-        log('heartbeat - player states sent');
+        log('heartbeat - player states sent to %d clients', io.sockets.sockets.length);
         io.emit('heartbeat sync', {
             timestamp: new Date(),
             players: space.getPlayerStates()
