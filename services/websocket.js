@@ -70,7 +70,7 @@ module.exports = function(io) {
     setInterval(function() {
         var deltaPlayers = Object.keys(deltaQueue);
         io.emit('delta sync', {
-            timestamp: new Date(),
+            timestamp: new Date().getTime(),
             players: space.getPlayerStates(deltaPlayers)
         });
         deltaQueue = {};
@@ -80,7 +80,7 @@ module.exports = function(io) {
     setInterval(function() {
         log('heartbeat - player states sent to %d clients', io.sockets.sockets.length);
         io.emit('heartbeat sync', {
-            timestamp: new Date(),
+            timestamp: new Date().getTime(),
             players: space.getPlayerStates()
         });
     }, 5000);
