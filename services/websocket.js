@@ -32,6 +32,7 @@ module.exports = function(io) {
             // TODO reject duplicates
             socket.username = username;
             socket.player = players[username] = space.spawnPlayer(username, x, y);
+            deltaQueue[socket.username] = true;
             io.emit('system message', username + ' joined the server.');
         });
 
