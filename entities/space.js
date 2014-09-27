@@ -40,7 +40,7 @@ var Space = function() {
 
     this.updatedAt = new Date().getTime();
     this.world = new Box2D.Dynamics.b2World(gravity, true);    // Allow sleep
-    this.players = [];
+    this.players = {};
     // TODO make as options
     this.boundry = {
         width: 1000,
@@ -94,12 +94,16 @@ Space.prototype.getMapState = function() {
 };
 
 Space.prototype.getPlayerStates = function(userList) {
-    var serializedPlayers = {},
+    var self = this,
+        serializedPlayers = {},
         usernames = userList || Object.keys(this.players);
     for(var i = 0; i < usernames.length; i++) {
         var username = usernames[i],
-            player = this.players[username],
-            body = player.fixture.GetBody(),
+            player = self.players[username];
+        if (!player || !player.fixture) {
+            continue;
+        }
+        var body = player.fixture.GetBody(),
             position = body.GetPosition(),
             linearVelocity = body.GetLinearVelocity();
 

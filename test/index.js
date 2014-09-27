@@ -110,7 +110,6 @@ describe('Server', function() {
 
             it('should send system message when login', function(done) {
                 var USERNAME = 'test user ' + Math.random();
-
                 client.on('connect', function() {
                     client.emit('login', USERNAME);
                 });
@@ -122,6 +121,11 @@ describe('Server', function() {
             });
 
             it('should get player states in heartbeats', function(done) {
+                var USERNAME = 'test user ' + Math.random();
+                client.on('connect', function() {
+                    client.emit('login', USERNAME);
+                });
+                
                 client.on('delta sync', function(state) {
                     state.should.have.property('timestamp');
                     state.should.have.property('players');
