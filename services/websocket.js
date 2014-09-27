@@ -66,14 +66,16 @@ module.exports = function(io) {
     // Update the world
     setInterval(space.update.bind(space), 1000 / 60);
 
-    // Delta sync every "frame" @ 15fps
+    // Delta sync every "frame" @ 15fps (if there are changes)
     setInterval(function() {
         var deltaPlayers = Object.keys(deltaQueue);
-        io.emit('delta sync', {
-            timestamp: new Date().getTime(),
-            players: space.getPlayerStates(deltaPlayers)
-        });
-        deltaQueue = {};
+        if (deltaPlayers.length) {
+            io.emit('delta sync', {
+                timestamp: new Date().getTime(),
+                players: space.getPlayerStates(deltaPlayers)
+            });
+            deltaQueue = {};
+        }
     }, 1000/15);
 
     // Heartbeat every 5 seconds, our "quiet" time
